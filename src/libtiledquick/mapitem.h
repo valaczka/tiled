@@ -76,7 +76,7 @@ signals:
     void mapChanged();
     void visibleAreaChanged();
 
-private:
+protected:
     void refresh();
 
     Tiled::Map *mMap;
