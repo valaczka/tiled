@@ -77,7 +77,7 @@ signals:
     void visibleAreaChanged();
 
 protected:
-    void refresh();
+    virtual void refresh();
 
     Tiled::Map *mMap;
     QRectF mVisibleArea;
