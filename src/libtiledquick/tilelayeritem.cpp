@@ -94,7 +94,8 @@ struct TilesetHelper
 
     void setTextureCoordinates(TileData &data, const Cell &cell) const
     {
-        const int tileId = cell.tileId();
+        //const int tileId = cell.tileId();
+        const int tileId = cell.tile() ? cell.tile()->currentFrameTile()->id() : cell.tileId();
         const int column = tileId % mTilesPerRow;
         const int row = tileId / mTilesPerRow;
 
