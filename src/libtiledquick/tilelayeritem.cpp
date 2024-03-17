@@ -31,6 +31,7 @@
 
 #include <QtMath>
 #include <QQuickWindow>
+#include <unordered_map>
 
 using namespace Tiled;
 using namespace TiledQuick;
@@ -44,7 +45,7 @@ namespace {
 static inline QSGTexture *tilesetTexture(Tileset *tileset,
                                          QQuickWindow *window)
 {
-    static QHash<Tileset *, QSGTexture *> cache;
+    /*static QHash<Tileset *, QSGTexture *> cache;
 
     QSGTexture *texture = cache.value(tileset);
     if (!texture) {
@@ -52,7 +53,26 @@ static inline QSGTexture *tilesetTexture(Tileset *tileset,
         texture = window->createTextureFromImage(QImage(imagePath));
         cache.insert(tileset, texture);
     }
-    return texture;
+    return texture;*/
+
+    static std::unordered_map<QString, std::unique_ptr<QSGTexture>> sharedTextures;
+
+    Q_ASSERT(window);
+
+    const QString path(Tiled::urlToLocalFileOrQrc(tileset->imageSource()));
+
+    auto it = sharedTextures.find(path);
+
+    if (it != sharedTextures.end())
+        return it->second.get();
+
+    QSGTexture *texture = window->createTextureFromImage(QImage(path));
+
+    std::unique_ptr<QSGTexture> s(texture);
+
+    const auto &ptr = sharedTextures.insert({path, std::move(s)});
+
+    return ptr.first->second.get();
 }
 
 /**
