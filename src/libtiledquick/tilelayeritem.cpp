@@ -153,7 +153,7 @@ TileLayerItem::TileLayerItem(TileLayer *layer, MapRenderer *renderer,
 void TileLayerItem::syncWithTileLayer()
 {
     const QRectF boundingRect = mRenderer->boundingRect(mLayer->rect());
-    setPosition(boundingRect.topLeft());
+    setPosition(boundingRect.topLeft()+mLayer->offset());
     setSize(boundingRect.size());
 }
 
