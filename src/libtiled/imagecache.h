@@ -61,6 +61,8 @@ public:
 
     static void remove(const QString &fileName);
 
+    static void clear();
+
 private:
     static QImage renderMap(const QString &fileName);
 

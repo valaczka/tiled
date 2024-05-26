@@ -21,6 +21,7 @@
 #pragma once
 
 #include <QQuickItem>
+#include <QSGTexture>
 
 #include "tilelayer.h"
 #include "tiledquick_global.h"
@@ -64,6 +65,10 @@ public:
 
     Tiled::TileLayer *tileLayer() const { return mLayer; }
 
+    static QSGTexture *tilesetTexture(Tiled::Tileset *tileset, QQuickWindow *window);
+
+    static void clearSharedTextures() { m_sharedTextures.clear(); }
+
 public slots:
     void updateVisibleTiles();
 
@@ -73,6 +78,7 @@ private:
     Tiled::TileLayer *mLayer;
     Tiled::MapRenderer *mRenderer;
     QRectF mVisibleArea;
+    static std::unordered_map<QString, std::unique_ptr<QSGTexture>> m_sharedTextures;
 };
 
 /**

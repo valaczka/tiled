@@ -120,6 +120,12 @@ void ImageCache::remove(const QString &fileName)
     sLoadedPixmaps.remove(fileName);
 }
 
+void ImageCache::clear()
+{
+    sLoadedImages.clear();
+    sLoadedPixmaps.clear();
+}
+
 QImage ImageCache::renderMap(const QString &fileName)
 {
     if (fileName.isEmpty())

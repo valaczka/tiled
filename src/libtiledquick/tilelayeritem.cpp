@@ -36,14 +36,13 @@
 using namespace Tiled;
 using namespace TiledQuick;
 
-namespace {
+std::unordered_map<QString, std::unique_ptr<QSGTexture>> TileLayerItem::m_sharedTextures;
 
 /**
  * Returns the texture of a given tileset, or 0 if the image has not been
  * loaded yet.
  */
-static inline QSGTexture *tilesetTexture(Tileset *tileset,
-                                         QQuickWindow *window)
+QSGTexture *TileLayerItem::tilesetTexture(Tileset *tileset, QQuickWindow *window)
 {
     /*static QHash<Tileset *, QSGTexture *> cache;
 
@@ -53,27 +52,30 @@ static inline QSGTexture *tilesetTexture(Tileset *tileset,
         texture = window->createTextureFromImage(QImage(imagePath));
         cache.insert(tileset, texture);
     }
-    return texture;*/
+    return texture;
 
-    static std::unordered_map<QString, std::unique_ptr<QSGTexture>> sharedTextures;
+    static std::unordered_map<QString, std::unique_ptr<QSGTexture>> sharedTextures;*/
 
     Q_ASSERT(window);
 
     const QString path(Tiled::urlToLocalFileOrQrc(tileset->imageSource()));
 
-    auto it = sharedTextures.find(path);
+    auto it = m_sharedTextures.find(path);
 
-    if (it != sharedTextures.end())
+    if (it != m_sharedTextures.end())
         return it->second.get();
 
     QSGTexture *texture = window->createTextureFromImage(QImage(path));
 
     std::unique_ptr<QSGTexture> s(texture);
 
-    const auto &ptr = sharedTextures.insert({path, std::move(s)});
+    const auto &ptr = m_sharedTextures.insert({path, std::move(s)});
 
     return ptr.first->second.get();
 }
+
+
+namespace {
 
 /**
  * This helper class exists mainly to avoid redoing calculations that only need
@@ -98,7 +100,7 @@ struct TilesetHelper
     void setTileset(Tileset *tileset)
     {
         mTileset = tileset;
-        mTexture = tilesetTexture(tileset, mWindow);
+        mTexture = TileLayerItem::tilesetTexture(tileset, mWindow);
         if (!mTexture)
             return;
 
