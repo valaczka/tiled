@@ -22,6 +22,7 @@
 
 #include <QQuickItem>
 #include <QSGTexture>
+#include <unordered_map>
 
 #include "tilelayer.h"
 #include "tiledquick_global.h"
