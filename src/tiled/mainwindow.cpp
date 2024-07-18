@@ -358,9 +358,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     mUi->actionPaste->setShortcuts(QKeySequence::Paste);
     QList<QKeySequence> deleteKeys = QKeySequence::keyBindings(QKeySequence::Delete);
     deleteKeys.removeAll(Qt::Key_D | Qt::ControlModifier);  // used as "duplicate" shortcut
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     // Add the Backspace key as primary shortcut for Delete, which seems to be
-    // the expected one for OS X.
+    // the expected one for macOS.
     if (!deleteKeys.contains(QKeySequence(Qt::Key_Backspace)))
         deleteKeys.prepend(QKeySequence(Qt::Key_Backspace));
 #endif
@@ -2151,7 +2151,7 @@ void MainWindow::updateActions()
     mUi->actionExportAsImage->setEnabled(mapDocument);
     mUi->actionExport->setEnabled(mapDocument || tilesetDocument);
     mUi->actionExportAs->setEnabled(mapDocument || tilesetDocument);
-    mUi->actionReload->setEnabled(mapDocument || (tilesetDocument && tilesetDocument->canReload()));
+    mUi->actionReload->setEnabled(document && document->canReload());
     mUi->actionClose->setEnabled(document);
     mUi->actionCloseAll->setEnabled(document);
 
@@ -2323,9 +2323,8 @@ void MainWindow::retranslateUi()
 void MainWindow::exportMapAs(MapDocument *mapDocument)
 {
     SessionOption<QString> lastUsedExportFilter { "map.lastUsedExportFilter" };
-    QString fileName = mapDocument->fileName();
     QString selectedFilter = lastUsedExportFilter;
-    auto exportDetails = chooseExportDetails<MapFormat>(fileName,
+    auto exportDetails = chooseExportDetails<MapFormat>(mapDocument->fileName(),
                                                         mapDocument->lastExportFileName(),
                                                         selectedFilter,
                                                         this);

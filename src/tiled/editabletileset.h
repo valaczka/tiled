@@ -25,6 +25,7 @@
 
 namespace Tiled {
 
+class ChangeEvent;
 class EditableTile;
 class EditableWangSet;
 class ScriptImage;
@@ -179,6 +180,7 @@ protected:
 private:
     bool tilesFromEditables(const QList<QObject*> &editableTiles, QList<Tile *> &tiles);
 
+    void documentChanged(const ChangeEvent &event);
     void attachTiles(const QList<Tile*> &tiles);
     void detachTiles(const QList<Tile*> &tiles);
     void detachWangSets(const QList<WangSet*> &wangSets);
@@ -329,5 +331,3 @@ inline void EditableTileset::setTileSize(int width, int height)
 }
 
 } // namespace Tiled
-
-Q_DECLARE_METATYPE(Tiled::EditableTileset*)

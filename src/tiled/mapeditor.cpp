@@ -206,7 +206,7 @@ MapEditor::MapEditor(QObject *parent)
     mToolsToolBar->addAction(mToolManager->registerTool(new LayerOffsetTool(this)));
     mToolsToolBar->addSeparator();  // todo: hide when there are no tool extensions
 
-    const auto tools = PluginManager::instance()->objects<AbstractTool>();
+    const auto tools = PluginManager::objects<AbstractTool>();
     for (auto tool : tools)
         mToolsToolBar->addAction(mToolManager->registerTool(tool));
 
@@ -783,6 +783,8 @@ void MapEditor::setStamp(const TileStamp &stamp)
         mToolManager->selectTool(mStampBrush);
 
     mTilesetDock->selectTilesInStamp(stamp);
+
+    emit currentBrushChanged();
 }
 
 void MapEditor::selectWangBrush()

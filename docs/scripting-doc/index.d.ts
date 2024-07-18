@@ -290,7 +290,7 @@ interface FilePath {
    * The local file path, or empty if the current URL value doesn't refer
    * to a local file.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   localFile: string;
 }
@@ -349,6 +349,7 @@ declare namespace Qt {
    * Returns a point with the specified `x` and `y` coordinates.
    */
   export function point(x: number, y: number): point;
+
   /**
    * Returns a rect with the top-left corner at `x`, `y` and the specified `width` and `height`.
    */
@@ -358,6 +359,7 @@ declare namespace Qt {
     width: number,
     height: number
   ): rect;
+
   /**
    * Returns a size with the specified `width` and `height`.
    */
@@ -379,6 +381,43 @@ declare namespace Qt {
   const AlignCenter: Alignment;
 
   /**
+   * Cursor shape. Can be used with {@link tiled.cursor} to create a system
+   * cursor.
+   */
+  type CursorShape = number;
+
+  const ArrowCursor: CursorShape;
+  const UpArrowCursor: CursorShape;
+  const CrossCursor: CursorShape;
+  const WaitCursor: CursorShape;
+  const IBeamCursor: CursorShape;
+  const SizeVerCursor: CursorShape;
+  const SizeHorCursor: CursorShape;
+  const SizeBDiagCursor: CursorShape;
+  const SizeFDiagCursor: CursorShape;
+  const SizeAllCursor: CursorShape;
+  const BlankCursor: CursorShape;
+  const SplitVCursor: CursorShape;
+  const SplitHCursor: CursorShape;
+  const PointingHandCursor: CursorShape;
+  const ForbiddenCursor: CursorShape;
+  const WhatsThisCursor: CursorShape;
+  const BusyCursor: CursorShape;
+  const OpenHandCursor: CursorShape;
+  const ClosedHandCursor: CursorShape;
+  const DragCopyCursor: CursorShape;
+  const DragMoveCursor: CursorShape;
+  const DragLinkCursor: CursorShape;
+
+  /**
+   * A mouse cursor.
+   *
+   * Can be created with {@link tiled.cursor} and assigned to {@link
+   * Tool.cursor}.
+   */
+  class QCursor {};
+
+  /**
    * The base type from which all Qt widgets derive.
    * Qt documentation: [QWidget](https://doc.qt.io/qt-6/qwidget.html)
    */
@@ -387,29 +426,34 @@ declare namespace Qt {
      * The toolTip displayed when the user mouses over this widget
      */
     toolTip: string;
+
     /**
      * Controls whether this widget is visible.
      * When toggling this property, the dialog layout will automatically adjust itself
      * based on the visible widgets.
-     * Qt documentation: [QWidget.visible](https://doc.qt.io/qt-6/qwidget.html#visible-prop);
+     * Qt documentation: [QWidget::visible](https://doc.qt.io/qt-6/qwidget.html#visible-prop);
      */
     visible: boolean;
+
     /**
      * If false, the widget cannot be interacted with.
-     * Qt documentation: [QWidget.enabled](https://doc.qt.io/qt-6/qwidget.html#enabled-prop)
+     * Qt documentation: [QWidget::enabled](https://doc.qt.io/qt-6/qwidget.html#enabled-prop)
      */
     enabled: boolean;
+
     /**
      * Set this property to override the style sheet for this widget.
      *
      * See https://doc.qt.io/qt-6/stylesheet.html and https://doc.qt.io/qt-6/stylesheet-examples.html for more information.
      */
     styleSheet: string;
+
     /**
      * You can use this property to prevent the widget from being resized to a width
      * below this amount.
      */
     minimumWidth: number;
+
     /**
      * You can use this property to prevent the widget from being resized to a height
      * below this amount.
@@ -484,60 +528,68 @@ declare namespace Qt {
      * Setting this property makes the line edit display a grayed-out placeholder text as long as the line edit is empty.
      */
     placeholderText: string;
+
     /**
      * This property holds the line edit's text.
      */
     text: string;
   }
 
+  /**
+   * A widget containing multiple lines of text that the user can edit.
+   * Qt documentation: [QTextEdit](https://doc.qt.io/qt-6/qtextedit.html)
+   */
+  class QTextEdit extends QWidget {
     /**
-     * A widget containing a multiple lines of text that the user can edit.
-     * Qt documentation: [QTextEdit](https://doc.qt.io/qt-6/qtextedit.html)
+     * This property holds whether the user can change the contents of the widget.
+     * If true, the user cannot change the text. Defaults to false.
      */
-     class QTextEdit extends QWidget {
-      /**
-       * This property holds whether the user can change the contents of the widget.
-       * If true, the user cannot change the text. Defaults to false.
-       */
-      readOnly: boolean;
-      /**
-       * This property holds the text editor's contents as plain text.
-       */
-      plainText: string;
-      /**
-       * Signal emitted when the text inside the QTextEdit is changed.
-       * Check the text with {@link plainText}, {@link html} or {@link markdown} when this is emitted.
-       */
-      textChanged: Signal<void>;
-      /**
-       * This property holds the text editor's contents as HTML
-       * See the supported HTML subset here:
-       * https://doc.qt.io/qt-6/richtext-html-subset.html
-       */
-      html: string;
-      /**
-       * This property provides a Markdown interface to the text of the text edit.
-       *
-       * See [QTextEdit::markdown](https://doc.qt.io/qt-6/qtextedit.html#markdown-prop) for details.
-       */
-      markdown: string;
-    }
+    readOnly: boolean;
 
-    type CheckState = number;
     /**
-    * The item is unchecked.
-    * Value = 0
-    */
-    const Unchecked: CheckState;
-    /**
-    * The item is partially checked.
-    * Value = 1.
-    */
-    const PartiallyChecked:CheckState;
-    /**
-     * Value = 2
+     * This property holds the text editor's contents as plain text.
      */
-    const Checked: CheckState;
+    plainText: string;
+
+    /**
+     * Signal emitted when the text inside the QTextEdit is changed.
+     * Check the text with {@link plainText}, {@link html} or {@link markdown} when this is emitted.
+     */
+    textChanged: Signal<void>;
+
+    /**
+     * This property holds the text editor's contents as HTML
+     * See the supported HTML subset here:
+     * https://doc.qt.io/qt-6/richtext-html-subset.html
+     */
+    html: string;
+
+    /**
+     * This property provides a Markdown interface to the text of the text edit.
+     *
+     * See [QTextEdit::markdown](https://doc.qt.io/qt-6/qtextedit.html#markdown-prop) for details.
+     */
+    markdown: string;
+  }
+
+  type CheckState = number;
+
+  /**
+   * The item is unchecked.
+   * Value = 0
+   */
+  const Unchecked: CheckState;
+
+  /**
+   * The item is partially checked.
+   * Value = 1.
+   */
+  const PartiallyChecked: CheckState;
+
+  /**
+   * Value = 2
+   */
+  const Checked: CheckState;
 
   /**
    * A check box widget which allows the user to toggle a value on and off.
@@ -637,11 +689,11 @@ declare namespace Qt {
     valueChanged: Signal<number>;
   }
 
-/**
- * An input widget which allows the user to set a floating point or integer
- * value by incrementing and decrementing it.
- * Qt documentation: [QDoubleSpinBox](https://doc.qt.io/qt-6/qdoublespinbox.html)
- */
+  /**
+   * An input widget which allows the user to set a floating point or integer
+   * value by incrementing and decrementing it.
+   * Qt documentation: [QDoubleSpinBox](https://doc.qt.io/qt-6/qdoublespinbox.html)
+   */
   class QDoubleSpinBox extends QWidget {
     /**
      * This property holds the minimum value of the spin box.
@@ -992,7 +1044,7 @@ declare class ObjectGroup extends Layer {
 /**
  * A type alias used to describe the possible values in object properties.
  */
-type TiledObjectPropertyValue = number | string | boolean | ObjectRef | FilePath | MapObject | PropertyValue | undefined
+type TiledObjectPropertyValue = number | string | boolean | color | ObjectRef | FilePath | MapObject | PropertyValue | undefined
 
 /**
  * An interface used to describe object properties.
@@ -1038,18 +1090,37 @@ declare class TiledObject {
   property(name: string): TiledObjectPropertyValue;
 
   /**
-   * Sets the value of the custom property with the given name. Supported
-   * types are `bool`, `number`, `string`, {@link FilePath},
-   * {@link ObjectRef} and {@link MapObject}.
+   * Sets the value of the custom property with the given name.
+   *
+   * Supported types are `bool`, `number`, `string`, {@link color},
+   * {@link FilePath}, {@link ObjectRef}, {@link MapObject} and
+   * {@link PropertyValue}.
+   *
+   * @note When setting a `number`, the property type will be set to either
+   * `int` or `float`, depending on whether it is a whole number. To force
+   * the property to be `float`, use {@link setFloatProperty}.
+   */
+  setProperty(name: string, value: TiledObjectPropertyValue): void;
+
+  /**
+   * Sets the value of an object's property identified by the given path
+   * to the given value.
+   *
+   * The path is a list of property names, where each name identifies
+   * a member of the previous member's value. The last name in the list
+   * identifies the property to set.
+   *
+   * Supported types are `bool`, `number`, `string`, {@link color},
+   * {@link FilePath}, {@link ObjectRef}, {@link MapObject} and
+   * {@link PropertyValue}.
    *
    * @note When setting a `number`, the property type will be set to either
    * `int` or `float`, depending on whether it is a whole number. To force
    * the property to be `float`, use {@link setFloatProperty}.
    *
-   * @note This function does not support setting `color` properties. Use
-   * {@link setColorProperty} instead.
+   * @since 1.11
    */
-  setProperty(name: string, value: TiledObjectPropertyValue): void;
+  setProperty(path: string[], value: TiledObjectPropertyValue): void;
 
   /**
    * Sets the value of the custom property with the given name to the given
@@ -1058,6 +1129,7 @@ declare class TiledObject {
    * The color is specified as a string "#RGB", "#RRGGBB" or "#AARRGGBB".
    *
    * @since 1.10
+   * @deprecated Use {@link setProperty} with a value created by {@link tiled.color} instead.
    */
   setColorProperty(name: string, value: color): void;
 
@@ -1070,6 +1142,7 @@ declare class TiledObject {
    * defaults to 255.
    *
    * @since 1.10
+   * @deprecated Use {@link setProperty} with a value created by {@link tiled.color} instead.
    */
   setColorProperty(name: string, red: number, green: number, blue: number, alpha?: number): void;
 
@@ -1154,7 +1227,7 @@ declare class Project extends TiledObject {
 /**
  * Details of a map that is added to a {@link World}.
  *
- * @since 1.10.3
+ * @since 1.11
  */
 declare class WorldMapEntry {
   /**
@@ -1174,7 +1247,7 @@ declare class WorldMapEntry {
  * Matching](https://doc.mapeditor.org/en/stable/manual/worlds/#using-pattern-matching)
  * section in the manual for more information.
  *
- * @since 1.10.3
+ * @since 1.11
  */
 declare class WorldPattern {
   /** 
@@ -1220,7 +1293,7 @@ declare class WorldPattern {
  * Worlds](https://doc.mapeditor.org/en/stable/manual/worlds/) page in the
  * manual for more information.
  *
- * @since 1.10.3
+ * @since 1.11
  */
 declare class World extends Asset {
   /**
@@ -1249,55 +1322,44 @@ declare class World extends Asset {
 
   /**
    * Returns true if this world contains a map with the given fileName.
-   * @param fileName The file name of the map to check for.
    */
   containsMap(fileName : string) : boolean;
 
   /**
    * Returns true if this world contains the given map.
-   * @param map The TileMap to check for.
    */
   containsMap(map : TileMap) : boolean;
 
   /**
-   * Change the position and size of a map within this world.
-   * @param fileName The file name of the map to change the position and size for.
-   * @param rect The new rect describing the position and size of the map.
+   * Change the position and size (in pixels) of the map with the given
+   * fileName within this world.
    */
   setMapRect(fileName: string, rect : rect): void;
 
   /**
-   * Change the position of a map within this world.
-   * @param map The TileMap of which to change the position.
-   * @param x The x position of the map in the world, in pixels.
-   * @param y The y position of the map in the world, in pixels.
+   * Change the position (in pixels) of the given map within this world.
    */
   setMapPos(map: TileMap, x: number, y: number): void;
 
   /**
-   * Add a map to this world.
-   * @param fileName The file name of the map to add to this world.
-   * @param rect A Qt.rect specifying the position and size of the map to add.
+   * Add a map to this world by its file name. The position and size is
+   * specified in pixels by the given rect.
    */
   addMap(fileName: string, rect: rect): void;
 
   /**
-   * Add a map to this world. The map size in pixels will be set automatically.
-   * @param map The TileMap instance to add to the world.
-   * @param x The x position of the map in the world, in pixels.
-   * @param y The y position of the map in the world, in pixels.
+   * Add the given map to this world. The position is given in pixels. The map
+   * size will be set automatically.
    */
   addMap(map: TileMap, x: number, y: number): void;
 
   /**
-   * Remove a map from this world.
-   * @param fileName The file name of the map to remove.
+   * Remove the map with the given file name from this world.
    */
   removeMap(fileName: string): void;
 
   /**
-   * Remove a map from this world.
-   * @param map The TileMap instance to remove from this world.
+   * Remove the given map from this world.
    */
   removeMap(map: TileMap): void;
 }
@@ -1500,7 +1562,7 @@ declare class MapObject extends TiledObject {
  * The top-level assets supported by Tiled. Not all of these assets have
  * associated editors.
  *
- * @since 1.10.3
+ * @since 1.11
  */
 declare enum AssetType {
   TileMap = 1,
@@ -1541,7 +1603,7 @@ declare class Asset extends TiledObject {
   /**
    * The signal emitted when {@link modified} changes.
    */
-  readonly modifiedChanged: Signal<null>;
+  readonly modifiedChanged: Signal<void>;
 
   /**
    * Whether the asset is a {@link TileMap}.
@@ -1556,7 +1618,7 @@ declare class Asset extends TiledObject {
   /**
    * The type of this asset.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   readonly assetType: AssetType;
 
@@ -1607,7 +1669,7 @@ declare class Asset extends TiledObject {
    * tiled.mapFormat} or {@link tiled.tilesetFormat}. This is currently not
    * supported for worlds.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   save(): boolean;
 }
@@ -1627,6 +1689,13 @@ interface FileFormat {
    * Whether this format supports writing files.
    */
   readonly canWrite: boolean;
+
+  /**
+   * The file name filter used by this format (used in file dialogs).
+   *
+   * @since 1.11.1
+   */
+  readonly nameFilter: FileFilter;
 
   /**
    * Returns whether the given file is readable by this format.
@@ -2133,10 +2202,10 @@ declare class Image {
   setPixel(x: number, y: number, index_or_rgb: number): void;
 
   /**
-   * Sets the color at the specified location to the given color by
-   * string (supports values like "#rrggbb").
+   * Sets the color at the specified location to the given color (supports
+   * values like "#rrggbb" or those created by {@link tiled.color}).
    */
-  setPixelColor(x: number, y: number, color: string): void;
+  setPixelColor(x: number, y: number, color: color): void;
 
   /**
    * Fills the image with the given 32-bit unsigned color value (ARGB) or color
@@ -2145,10 +2214,10 @@ declare class Image {
   fill(index_or_rgb: number): void;
 
   /**
-   * Fills the image with the given color by string (supports values like
-   * "#rrggbb").
+   * Fills the image with the given color (supports values like
+   * "#rrggbb" or those created by {@link tiled.color}).
    */
-  fill(color: string): void;
+  fill(color: color): void;
 
   /**
    * Loads the image from the given file name. When no format is given it
@@ -2192,16 +2261,25 @@ declare class Image {
   setColor(index: number, rgb: number): void;
 
   /**
-   * Sets the color at the given index in the color table to a color by
-   * string (supports values like "#rrggbb").
+   * Sets the color at the given index in the color table to a color (supports
+   * values like "#rrggbb" or those created by {@link tiled.color}).
    */
-  setColor(index: number, color: string) : void;
+  setColor(index: number, color: color) : void;
 
   /**
    * Sets the color table given by an array of either 32-bit color values
     or strings (supports values like "#rrggbb").
    */
   setColorTable(colors: number[] | string[]): void;
+
+  /**
+   * Copies the given rectangle to a new image object.
+   *
+   * When no rectangle is given, the entire image is copied.
+   *
+   * @since 1.11
+   */
+  copy(rect?: rect) : Image;
 
   /**
    * Copies the given rectangle to a new image object.
@@ -2243,7 +2321,7 @@ declare class ImageLayer extends Layer {
   /**
    * Reference to the image rendered by this layer.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   imageFileName: string;
 
@@ -2333,6 +2411,16 @@ interface MapEditor {
   currentBrush : TileMap
 
   /**
+   * Signal emitted when the current brush has changed.
+   *
+   * This signal is also emitted when assigning to {@link currentBrush}, so be
+   * careful not to cause an infinite loop.
+   *
+   * @since 1.11.1
+   */
+  currentBrushChanged : Signal<void>;
+
+  /**
    * Gets the currently selected {@link WangSet} in the "Terrain Sets" view.
    *
    * See also {@link TileLayerWangEdit}.
@@ -2346,7 +2434,7 @@ interface MapEditor {
    *
    * @since 1.8
    */
-  readonly currentWangSetChanged: Signal<null>;
+  readonly currentWangSetChanged: Signal<void>;
 
   /**
    * Gets the currently selected Wang color index in the "Terrain Sets" view.
@@ -2393,7 +2481,7 @@ interface TilesetsView {
    *
    * @since 1.9.1
    */
-  readonly currentTilesetChanged: Signal<null>;
+  readonly currentTilesetChanged: Signal<void>;
 
   /**
    * A list of the tiles that are selected in the current tileset.
@@ -2466,10 +2554,20 @@ declare class Tile extends TiledObject {
    * Returns the image of this tile, or the image of its tileset if it doesn't
    * have an individual one.
    *
+   * Note that a tile represents a sub-rectangle of its image (or its tileset's
+   * image), even if is part of an image collection tileset. The {@link
+   * imageRect} property provides access to this sub-rectangle. If you need a
+   * copy of the tile's image that is already cropped to this sub-rectangle,
+   * you can use the following snippet:
+   *
+   * ```js
+   * let image = tile.image.copy(tile.imageRect);
+   * ```
+   *
    * You can assign an {@link Image} to this property to change the tile's
    * image. See {@link setImage} for more information.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   image: Image;
 
@@ -2525,7 +2623,7 @@ declare class Tile extends TiledObject {
    * when saving the tileset the image data will be embedded for formats that
    * support this (currently only TMX/TSX).
    *
-   * @note Before Tiled 1.10.3, this function did not change the image file
+   * @note Before Tiled 1.11, this function did not change the image file
    * name. For compatibility, set {@link imageFileName} before calling this
    * function, if necessary.
    *
@@ -2829,7 +2927,7 @@ declare class TileMap extends Asset {
   /**
    * The signal emitted when {@link currentLayer} changes.
    */
-  readonly currentLayerChanged: Signal<null>;
+  readonly currentLayerChanged: Signal<void>;
 
   /**
    * Selected layers.
@@ -2842,7 +2940,7 @@ declare class TileMap extends Asset {
   /**
    * The signal emitted when {@link selectedLayers} changes.
    */
-  readonly selectedLayersChanged: Signal<null>;
+  readonly selectedLayersChanged: Signal<void>;
 
   /**
    * Selected objects.
@@ -2855,7 +2953,7 @@ declare class TileMap extends Asset {
   /**
    * The signal emitted when {@link selectedObjects} changes.
    */
-  readonly selectedObjectsChanged: Signal<null>;
+  readonly selectedObjectsChanged: Signal<void>;
 
   /**
    * Constructs a new map.
@@ -3464,6 +3562,8 @@ declare class WangSet extends TiledObject {
  * and "#AARRGGBB" respectively. For example, the color red corresponds to a
  * triplet of "#FF0000" and a slightly transparent blue to a quad of
  * "#800000FF".
+ *
+ * Use {@link tiled.color} to create a color value.
  */
 interface color {}
 
@@ -3510,7 +3610,7 @@ declare class Tileset extends Asset {
    *
    * @note Map files are supported tileset image source as well.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   imageFileName : string
 
@@ -3831,7 +3931,7 @@ interface TilesetEditor {
    *
    * @since 1.9
    */
-  readonly currentWangSetChanged: Signal<null>;
+  readonly currentWangSetChanged: Signal<void>;
 
   /**
    * Gets the currently selected Wang color index in the "Terrain Sets" view.
@@ -4059,6 +4159,14 @@ interface Tool extends ToolDefinition {
   statusInfo: string;
 
   /**
+   * The cursor used by this tool. This will be the cursor set on the viewport
+   * of the {@link MapView} while the tool is active.
+   *
+   * A {@link Qt.QCursor} value can be created with {@link tiled.cursor}.
+   */
+  cursor: Qt.QCursor;
+
+  /**
    * Whether this tool is enabled.
    */
   enabled: boolean;
@@ -4272,6 +4380,9 @@ declare namespace tiled {
    * Shows a dialog that asks the user to enter some text, along with the
    * given label and optional title. The optional `text` parameter
    * provides the initial value of the text. Returns the entered text.
+   *
+   * For more complex input requirements, consider creating a custom
+   * {@link Dialog}.
    */
   export function prompt(label: string, text?: string, title?: string): string;
 
@@ -4279,7 +4390,9 @@ declare namespace tiled {
    * Shows a dialog which asks the user to choose an existing directory.
    * Optionally override the starting directory of the dialog or its title.
    *
-   * Returns the absolute path of the chosen directory, or an empty string if the user cancels the dialog.
+   * Returns the absolute path of the chosen directory, or an empty string if
+   * the user cancels the dialog.
+   *
    * @since 1.10.2
    */
   export function promptDirectory(defaultDir?: string, title?: string): string;
@@ -4289,7 +4402,9 @@ declare namespace tiled {
    * Optionally override the starting directory of the dialog or its title.
    * You can also restrict to only certain file types by specifying {@link FileFilter|filters}.
    *
-   * Returns an array of the absolute paths of the chosen files, or an empty array if the user cancels the dialog.
+   * Returns an array of the absolute paths of the chosen files, or an empty
+   * array if the user cancels the dialog.
+   *
    * @since 1.10.2
    */
   export function promptOpenFiles(defaultDir?: string, filters?: FileFilter, title?: string): string[];
@@ -4299,7 +4414,9 @@ declare namespace tiled {
    * Optionally override the starting directory of the dialog or its title.
    * You can also restrict to only certain file types by specifying {@link FileFilter|filters}.
    *
-   * Returns the absolute path of the chosen file, or an empty string if the user cancels the dialog.
+   * Returns the absolute path of the chosen file, or an empty string if the
+   * user cancels the dialog.
+   *
    * @since 1.10.2
    */
   export function promptOpenFile(defaultDir?: string, filters?: FileFilter, title?: string): string;
@@ -4310,7 +4427,9 @@ declare namespace tiled {
    * Optionally override the starting directory of the dialog or its title.
    * You can also restrict to only certain file types by specifying {@link FileFilter|filters}.
    *
-   * Returns the absolute path of the chosen file, or an empty string if the user cancels the dialog.
+   * Returns the absolute path of the chosen file, or an empty string if the
+   * user cancels the dialog.
+   *
    * @since 1.10.2
    */
   export function promptSaveFile(defaultDir?: string, filters?: string, title?: string): string;
@@ -4478,6 +4597,24 @@ declare namespace tiled {
   export function mapFormatForFile(fileName: string): MapFormat | undefined;
 
   /**
+   * Creates a {@link color} based on the given color name (i.e. red or #ff0000).
+   *
+   * See [QColor::fromString](https://doc.qt.io/qt-6/qcolor.html#fromString)
+   * for the accepted color names.
+   *
+   * @since 1.11
+   */
+  export function color(name: string): color;
+
+  /**
+   * Creates a {@link color} with the RGB value r, g, b, and the alpha-channel
+   * (transparency) value of a (which defaults to 1.0).
+   *
+   * @since 1.11
+   */
+  export function color(r: number, g: number, b: number, a?: number): color;
+
+  /**
    * Creates a {@link FilePath} object with the given URL.
    */
   export function filePath(path: string): FilePath;
@@ -4509,6 +4646,20 @@ declare namespace tiled {
    * @since 1.8
    */
   export function propertyValue(type: string, value: object | number | string): PropertyValue;
+
+  /**
+   * Creates a cursor with the given shape.
+   *
+   * @since 1.11.1
+   */
+  export function cursor(shape: Qt.CursorShape): Cursor;
+
+  /**
+   * Creates a cursor with the given image and the optional hotspot.
+   *
+   * @since 1.11.1
+   */
+  export function cursor(image: Image, hotX?: number, hotY?: number): Cursor;
 
   /**
    * Registers a new map format that can then be used to open and/or save
@@ -4608,6 +4759,13 @@ declare namespace tiled {
   export const assetOpened: Signal<Asset>;
 
   /**
+   * An asset has been reloaded.
+   *
+   * @since 1.11
+   */
+  export const assetReloaded: Signal<Asset>;
+
+  /**
    * An asset is about to be saved. Can be used to make last-minute
    * changes.
    */
@@ -4630,31 +4788,31 @@ declare namespace tiled {
 
   /**
    * A list of all currently loaded {@link World|worlds}.
-   * @since 1.10.3
+   * @since 1.11
    */
   export const worlds : World[];
 
   /**
    * Load a world contained in a .world file in the path fileName.
-   * @since 1.10.3
+   * @since 1.11
    */
   export function loadWorld(fileName : string) : void;
 
   /**
    * Unload a world contained in a .world file in the path fileName.
-   * @since 1.10.3
+   * @since 1.11
    */
   export function unloadWorld(fileName : string) : void;
 
   /**
    * Unload all currently loaded worlds.
-   * @since 1.10.3
+   * @since 1.11
    */
   export function unloadAllWorlds() : void;
 
   /**
    * Signal emitted when any world is loaded, unloaded, reloaded or changed.
-   * @since 1.10.3
+   * @since 1.11
    */
   export const worldsChanged : Signal<void>;
 }
@@ -4787,7 +4945,7 @@ declare class FileEdit extends Qt.QWidget {
   /**
    * The current file path.
    *
-   * @since 1.10.3
+   * @since 1.11
    */
   fileName: string;
 
@@ -4829,12 +4987,14 @@ declare class ImageWidget extends Qt.QWidget {
  * The `Dialog` object is used to display a dialog to the user
  * which can be filled with a variety of widgets.
  *
- * The left-hand column of the dialog can only contain headings. If you call {@link addHeading} without
- * specifying maxWidth = true, your heading will be placed in the left-hand column of the dialog.
+ * The left-hand column of the dialog can only contain headings. If you call
+ * {@link addHeading} without specifying maxWidth = true, your heading will be
+ * placed in the left-hand column of the dialog.
  *
- * All other widgets will be placed in the right-hand side column. When you add multiple instances
- * of the same type of widget sequentially, they will be grouped into the same row unless you call {@link addNewRow}
- * in between adding the widgets.
+ * All other widgets will be placed in the right-hand side column. When you add
+ * multiple instances of the same type of widget sequentially, they will be
+ * grouped into the same row unless you call {@link addNewRow} in between
+ * adding the widgets or change the {@link newRowMode} property.
  *
  * This type is an extension of the [QDialog](https://doc.qt.io/qt-6/qdialog.html) type from Qt.
  *
@@ -4852,27 +5012,27 @@ declare class Dialog extends Qt.QWidget {
   static readonly Accepted: unique symbol
 
   /**
-   * Create a new Dialog object without assigning
-   * a title and using the default width and height of 450 pixels.
-   */
-  constructor();
-  /**
-   * Create a new dialog object, customizing the title.
-   * @param windowTitle - the title appearing at the top of the dialog.
-   */
-  constructor(windowTitle: string);
-  /**
-   * The default row layout mode for Dialogs.
-   * In this mode, if you add multiple of the same type of widget in a row,
-   * (for instance by calling {@link addButton} twice in a row),
-   * the Dialog will automatically group them into the same row.
+   * Create a new dialog with the given window title.
    *
-   * As soon as a differently typed widget is added, a new
-   * row will be added to the dialog. The exception to this rule is
-   * the widget created by addLabel(), which will be mixed with any other
-   * widget types when using this mode.
+   * When not given the title defaults to "Script".
+   */
+  constructor(windowTitle?: string);
+
+
+  /**
+   * The default row layout mode.
+   *
+   * In this mode, if you add multiple of the same type of widget in a row,
+   * (for instance by calling {@link addButton} twice in a row), the Dialog
+   * will automatically group them into the same row.
+   *
+   * As soon as a differently typed widget is added, a new row will be added to
+   * the dialog. The exception to this rule is the widget created by {@link
+   * addLabel}, which will be mixed with any other widget types when using this
+   * mode.
    */
   static readonly SameWidgetRows: unique symbol;
+
   /**
    * In this mode, the dialog will not add a new row unless you call
    * {@link addNewRow}, {@link addHeading} or {@link addSeparator}.
@@ -4888,7 +5048,7 @@ declare class Dialog extends Qt.QWidget {
 
   /**
    * Controls the automatic widget placement behavior of the dialog.
-   * Defaults to {@link SameWidgetRows}
+   * Defaults to {@link SameWidgetRows}.
    */
   newRowMode: typeof Dialog.SingleWidgetRows | typeof Dialog.SameWidgetRows | typeof Dialog.ManualRows;
 
@@ -4899,22 +5059,18 @@ declare class Dialog extends Qt.QWidget {
   addNewRow(): void;
 
   /**
-   * Add a heading to the dialog. A heading will always be the first
-   * widget in a row.
+   * Add a heading to the dialog with the given labelText. A heading will
+   * always be the first widget in a row.
    *
-   * @param labelText - the text to display in the heading.
-   * @param maxWidth -  if true, the heading will be expanded to the full
-   *                    width of the dialog. if false, it will be confined
-   *                    to the left-hand column of the dialog.
-   *                    Defaults to false.
+   * If the optional maxWidth parameter is true, the heading will be expanded
+   * to the full width of the dialog. Otherwise, it will be confined to the
+   * left-hand column of the dialog.
    */
   addHeading(labelText:string, maxWidth?: boolean): Qt.QLabel;
 
   /**
-   * Add a label to the dialog. A label will always be the first
-   * widget in a row.
-   *
-   * @param labelText - the text to display in the label.
+   * Add a label to the dialog with the given test. A label will always be the
+   * first widget in a row.
    */
   addLabel(labelText:string): Qt.QLabel;
 
@@ -4930,67 +5086,81 @@ declare class Dialog extends Qt.QWidget {
   addImage(labelText: string, image: Image): ImageWidget;
 
   /**
-   * Add a {@link Qt.QSlider} widget to the dialog to allow a user to
-   * type a numerical value or use up and down controls on the widget to manipulate the value.
+   * Add a {@link Qt.QSlider} widget to the dialog to allow a user to type a
+   * numerical value or use up and down controls on the widget to manipulate
+   * the value.
+   *
    * This can be used to enter integer or decimal values.
    */
   addNumberInput(labelText?: string): Qt.QDoubleSpinBox;
 
   /**
    * Add a {@link Qt.QSlider} widget to the dialog to allow a user to
-   * slide a handle within a number range. This can only be used to enter integer-type values.
+   * slide a handle within a number range.
+   *
+   * This can only be used to enter integer-type values.
    */
   addSlider(labelText?: string): Qt.QSlider;
 
   /**
-   * Add a {@link Qt.QCheckBox} widget to the dialog to allow a user to
-   * toggle a boolean value.
-   * @param labelText The text of the label to display inside the checkbox widget
-   * @param defaultValue true to have the checkbox checked by default, false to have the checkbox start unchecked.
+   * Add a {@link Qt.QCheckBox} widget with the given text to the dialog.
+   * Allows a user to toggle a boolean value.
+   *
+   * If the defaultValue parameter is true the checkbox is checked by default.
    */
-  addCheckBox(labelText: string, defaultValue: boolean): Qt.QCheckBox;
+  addCheckBox(text?: string, defaultValue?: boolean): Qt.QCheckBox;
 
   /**
-   * Add a {@link Qt.QPushButton} widget to the dialog to allow the user
-   * to press a button that you can respond to the clicked signal of.
-   * @param labelText
+   * Add a {@link Qt.QPushButton} widget with the given text to the dialog.
+   * Allows the user to press a button that you can respond to the clicked
+   * signal of.
    */
-  addButton(labelText: string): Qt.QPushButton;
+  addButton(text?: string): Qt.QPushButton;
 
   /**
-   * Add a {@link Qt.QLineEdit} widget to the dialog to allow the user
-   * to enter a single line of text
-   * @param labelText - text to display in a label to the left of the widget
-   * @param defaultValue - the default value to display in the input
+   * Add a {@link Qt.QLineEdit} widget to the dialog to allow the user to enter
+   * a single line of text. The initial text on the widget can be given by
+   * defaultValue parameter.
+   *
+   * If the labelText is non-empty, a label widget will be added to the left of
+   * the widget.
    */
   addTextInput(labelText?: string, defaultValue?: string): Qt.QLineEdit;
 
   /**
-   * Add a {@link Qt.QTextEdit} widget to the dialog to allow the user
-   * to edit multiple lines of text. Also allows display of rendered HTML
-   * by setting the {@link Qt.QTextEdit.html} property.
-   * @param labelText - text to display in a label to the left of the widget
-   * @param defaultValue - the default value to display in the input
+   * Add a {@link Qt.QTextEdit} widget to the dialog to allow the user to edit
+   * multiple lines of text. Also allows display of rendered HTML by setting
+   * the {@link Qt.QTextEdit.html} property. The initial text on the widget can
+   * be given by defaultValue parameter.
+   *
+   * If the labelText is non-empty, a label widget will be added to the left of
+   * the widget.
    */
   addTextEdit(labelText?: string, defaultValue?: string): Qt.QTextEdit;
 
   /**
-   * Add a {@link Qt.QComboBox} widget (AKA a dropdown) allowing the user to pick
-   * between multiple pre-set values.
-   * @param labelText The text to display on the widget label to the left of the dropdown
-   * @param values The values to allow the user to select between.
+   * Add a {@link Qt.QComboBox} widget (also known as a dropdown) allowing the
+   * user to select one of the given values.
+   *
+   * If the labelText is non-empty, a label widget will be added to the left of
+   * the widget.
    */
   addComboBox(labelText: string, values: string[]): Qt.QComboBox;
 
   /**
    * Add a {@link ColorButton} widget that allows the user to pick a color.
-   * @param labelText the text of the widget label displayed to the left of the widget.
+   *
+   * If the labelText is non-empty, a label widget will be added to the left of
+   * the widget.
    */
   addColorButton(labelText?: string): ColorButton;
 
   /**
    * Add a {@link FileEdit} widget with a button which opens a file picker
    * dialog and displays the path in the dialog.
+   *
+   * If the labelText is non-empty, a label widget will be added to the left of
+   * the widget.
    */
   addFilePicker(labelText?: string): FileEdit;
 
@@ -5028,8 +5198,6 @@ declare class Dialog extends Qt.QWidget {
   /**
    * Close this dialog, setting its result code to {@link Dialog.Accepted} or
    * {@link Dialog.Rejected}.
-   *
-   * @param resultCode - {@link Dialog.Accepted} or {@link Dialog.Rejected}
    */
   done(resultCode: typeof Dialog.Rejected | typeof Dialog.Accepted): void;
 
