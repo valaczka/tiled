@@ -198,6 +198,8 @@ bool Tileset::loadFromImage(const QImage &image, const QUrl &source)
 
     initializeTilesetTiles();
 
+    mImage = {};
+
     return true;
 }
 
@@ -242,7 +244,14 @@ bool Tileset::loadImage()
         }
     }
 
-    return initializeTilesetTiles();
+    if (!initializeTilesetTiles()) {
+        mImage = {};
+        return false;
+    }
+
+    mImage = {};
+
+    return true;
 }
 
 bool Tileset::initializeTilesetTiles()
@@ -431,6 +440,9 @@ Tile *Tileset::addTile(const QPixmap &image, const QUrl &source, const QRect &re
     Tile *newTile = new Tile(takeNextTileId(), this);
     newTile->setImage(image);
     newTile->setImageSource(source);
+    newTile->setImageRect(rect.isNull() ? image.rect() : rect);
+
+    newTile->setImage({});
     newTile->setImageRect(rect.isNull() ? image.rect() : rect);
 
     mTilesById.insert(newTile->id(), newTile);

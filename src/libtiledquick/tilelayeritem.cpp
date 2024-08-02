@@ -32,6 +32,7 @@
 #include <QtMath>
 #include <QQuickWindow>
 #include <unordered_map>
+#include "qsgsimpletexturenode.h"
 
 using namespace Tiled;
 using namespace TiledQuick;
@@ -42,7 +43,7 @@ std::unordered_map<QString, std::unique_ptr<QSGTexture>> TileLayerItem::m_shared
  * Returns the texture of a given tileset, or 0 if the image has not been
  * loaded yet.
  */
-QSGTexture *TileLayerItem::tilesetTexture(Tileset *tileset, QQuickWindow *window)
+QSGTexture *TileLayerItem::tilesetTexture(const QUrl &imageSource, QQuickWindow *window)
 {
     /*static QHash<Tileset *, QSGTexture *> cache;
 
@@ -58,12 +59,15 @@ QSGTexture *TileLayerItem::tilesetTexture(Tileset *tileset, QQuickWindow *window
 
     Q_ASSERT(window);
 
-    const QString path(Tiled::urlToLocalFileOrQrc(tileset->imageSource()));
+    const QString path(Tiled::urlToLocalFileOrQrc(imageSource));
 
     auto it = m_sharedTextures.find(path);
 
     if (it != m_sharedTextures.end())
         return it->second.get();
+
+    if (path.isEmpty())
+        return nullptr;
 
     QSGTexture *texture = window->createTextureFromImage(QImage(path));
 
@@ -100,7 +104,7 @@ struct TilesetHelper
     void setTileset(Tileset *tileset)
     {
         mTileset = tileset;
-        mTexture = TileLayerItem::tilesetTexture(tileset, mWindow);
+        mTexture = TileLayerItem::tilesetTexture(tileset->imageSource(), mWindow);
         if (!mTexture)
             return;
 
@@ -193,8 +197,11 @@ QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
             helper.setTileset(tileset);
         }
 
-        if (!helper.texture())
+        if (!helper.texture() && !tileset->isCollection()) {
+            qWarning() << "Missing texture";
             return;
+        }
+
 
         // todo: render "missing tile" marker
 //        if (!cell.tile()) {
@@ -203,7 +210,7 @@ QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
 
         const auto offset = tileset->tileOffset();
         const auto tile = tileset->findTile(cell.tileId());
-        const QSize size = (tile && !tile->image().isNull()) ? tile->size() : mRenderer->map()->tileSize();
+        const QSize size = tile ? tile->size() : mRenderer->map()->tileSize();
 
         TileData data;
         data.x = static_cast<float>(screenPos.x()) + offset.x();
@@ -212,8 +219,29 @@ QSGNode *TileLayerItem::updatePaintNode(QSGNode *node,
         data.height = static_cast<float>(size.height());
         data.flippedHorizontally = cell.flippedHorizontally();
         data.flippedVertically = cell.flippedVertically();
-        helper.setTextureCoordinates(data, cell);
-        tileData.append(data);
+        ///helper.setTextureCoordinates(data, cell);
+        ///tileData.append(data);
+
+	if (tileset->isCollection()) {
+		if (cell.tile()) {
+			QSGSimpleTextureNode *imgNode = new QSGSimpleTextureNode();
+			imgNode->setOwnsTexture(false);
+			imgNode->setFlag(QSGNode::OwnedByParent);
+			node->appendChildNode(imgNode);
+			auto *txr = tilesetTexture(tile->imageSource(), static_cast<MapItem*>(parentItem())->window());
+			imgNode->setTexture(txr);
+			imgNode->setSourceRect(QRectF(QPointF{0,0}, txr->textureSize()));
+			imgNode->setRect(data.x, data.y, data.width, data.height);
+			imgNode->markDirty(QSGNode::DirtyGeometry);
+		} else {
+			qWarning() << "Missing cell tile";
+		}
+
+		return;
+	} else {
+		helper.setTextureCoordinates(data, cell);
+		tileData.append(data);
+	}
     };
 
     mRenderer->drawTileLayer(tileRenderFunction, mVisibleArea);

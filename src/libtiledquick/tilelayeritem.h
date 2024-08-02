@@ -66,7 +66,7 @@ public:
 
     Tiled::TileLayer *tileLayer() const { return mLayer; }
 
-    static QSGTexture *tilesetTexture(Tiled::Tileset *tileset, QQuickWindow *window);
+    static QSGTexture *tilesetTexture(const QUrl &imageSource, QQuickWindow *window);
 
     static void clearSharedTextures() { m_sharedTextures.clear(); }
 
