@@ -78,8 +78,7 @@ public:
     QString exportFormat;
 
     enum Property {
-        TileWidthProperty,
-        TileHeightProperty,
+        TileSizeProperty,
         InfiniteProperty,
         HexSideLengthProperty,
         StaggerAxisProperty,
@@ -212,6 +211,7 @@ public:
     void setTileHeight(int height);
 
     QSize tileSize() const;
+    void setTileSize(QSize size);
 
     bool infinite() const;
     void setInfinite(bool infinite);
@@ -453,6 +453,12 @@ inline void Map::setTileHeight(int height)
 inline QSize Map::tileSize() const
 {
     return QSize(mParameters.tileWidth, mParameters.tileHeight);
+}
+
+inline void Map::setTileSize(QSize size)
+{
+    mParameters.tileWidth = size.width();
+    mParameters.tileHeight = size.height();
 }
 
 inline bool Map::infinite() const
@@ -737,15 +743,7 @@ inline bool Map::LayerIteratorHelper::isEmpty() const
 
 inline QList<Layer *> Map::LayerIteratorHelper::toList() const
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     return QList<Layer *>(begin(), end());
-#else
-    LayerIterator iterator(&mMap, mLayerTypes);
-    QList<Layer *> layers;
-    while (Layer *layer = iterator.next())
-        layers.append(layer);
-    return layers;
-#endif
 }
 
 
@@ -791,3 +789,5 @@ Q_DECLARE_METATYPE(Tiled::Map*)
 Q_DECLARE_METATYPE(Tiled::Map::Orientation)
 Q_DECLARE_METATYPE(Tiled::Map::LayerDataFormat)
 Q_DECLARE_METATYPE(Tiled::Map::RenderOrder)
+Q_DECLARE_METATYPE(Tiled::Map::StaggerAxis)
+Q_DECLARE_METATYPE(Tiled::Map::StaggerIndex)

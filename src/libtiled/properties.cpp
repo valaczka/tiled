@@ -105,16 +105,16 @@ bool setPropertyMemberValue(Properties &properties,
     Q_ASSERT(!path.isEmpty());
 
     auto &topLevelName = path.first();
-    auto topLevelValue = properties.value(topLevelName);
 
     if (path.size() > 1) {
+        auto topLevelValue = properties.value(topLevelName);
         if (!setClassPropertyMemberValue(topLevelValue, 1, path, value))
             return false;
+        properties.insert(topLevelName, topLevelValue);
     } else {
-        topLevelValue = value;
+        properties.insert(topLevelName, value);
     }
 
-    properties.insert(topLevelName, topLevelValue);
     return true;
 }
 
@@ -125,17 +125,7 @@ void mergeProperties(Properties &target, const Properties &source)
         return;
     }
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    // Based on QMap::unite, but using insert instead of insertMulti
-    Properties::const_iterator it = source.constEnd();
-    const Properties::const_iterator b = source.constBegin();
-    while (it != b) {
-        --it;
-        target.insert(it.key(), it.value());
-    }
-#else
     target.insert(source);
-#endif
 }
 
 QJsonArray propertiesToJson(const Properties &properties, const ExportContext &context)

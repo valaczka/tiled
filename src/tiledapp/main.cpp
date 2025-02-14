@@ -41,8 +41,6 @@
 #include <QJsonDocument>
 #include <QtPlugin>
 
-#include "qtcompat_p.h"
-
 #include <memory>
 
 #ifdef Q_OS_WIN
@@ -424,13 +422,11 @@ int main(int argc, char *argv[])
     }
 #endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
     QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::RoundPreferFloor);
 
     // High-DPI scaling is always enabled in Qt 6
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
 #endif
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -444,7 +440,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 #endif
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC) && QT_VERSION < QT_VERSION_CHECK(6, 7, 3)
     QCoreApplication::setAttribute(Qt::AA_DontShowIconsInMenus);
 #endif
 
